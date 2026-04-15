@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="refresh" content="3600">
+<title>São Paulo (State) - Macro &amp; Demographics Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --accent:#009b3a;--accent-bg:#e0f5e8;
+    --red:#e03535;--green:#009b3a;--amber:#d97a00;
+    --text:#0e0e0c;--muted:#6b6b65;--surface:#f0f0ed;
+    --card:#fff;--border:rgba(0,0,0,0.09);--bg:#f7f7f4;
+    --mono:'IBM Plex Mono',monospace;--display:'IBM Plex Sans',sans-serif;
+  }
+  @media(prefers-color-scheme:dark){
+    :root{--text:#eae8e0;--muted:#888;--surface:#1e1e1b;--card:#181816;
+          --border:rgba(255,255,255,0.08);--bg:#111110;--accent-bg:#062a12;}
+  }
+  html{scroll-behavior:smooth;}
+  body{font-family:var(--display);background:var(--bg);color:var(--text);min-height:100vh;}
+  .page{max-width:1000px;margin:0 auto;padding:1.75rem 1.5rem 3.5rem;}
+
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.4rem;}
+  .back{font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:5px;transition:color .15s;}
+  .back:hover{color:var(--text);}
+  .flag-label{display:flex;align-items:center;gap:8px;}
+  .country-name{font-size:13px;font-weight:700;letter-spacing:-0.01em;}
+
+  .header{border-bottom:1px solid var(--border);padding-bottom:.9rem;margin-bottom:1.3rem;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+  .header-title{font-size:20px;font-weight:800;letter-spacing:-0.02em;}
+  .header-sub{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:3px;}
+  .header-right{font-size:11px;color:var(--muted);font-family:var(--mono);text-align:right;line-height:1.7;}
+  .data-note{font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:2px;}
+
+  .info-box{background:var(--surface);border-radius:8px;border-left:3px solid var(--accent);padding:11px 15px;font-size:12px;color:var(--muted);font-family:var(--mono);line-height:1.7;margin-bottom:12px;}
+  .info-box strong{color:var(--text);font-weight:500;}
+
+  .charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+  @media(max-width:600px){.charts-grid{grid-template-columns:1fr;}}
+  .chart-full{grid-column:1/-1;}
+  .chart-card{background:var(--card);border:.5px solid var(--border);border-radius:10px;padding:14px 16px 10px;}
+  .chart-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;flex-wrap:wrap;gap:6px;}
+  .chart-title{font-size:13px;font-weight:600;color:var(--text);}
+  .chart-caption{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:2px;}
+
+  .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px;}
+  .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);font-family:var(--mono);}
+  .ldot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+
+  footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--border);font-size:11px;color:var(--muted);font-family:var(--mono);line-height:1.7;}
+  canvas{display:block;}
+  details.sources{margin-top:18px;background:var(--card);border:.5px solid var(--border);border-radius:10px;padding:12px 16px;}
+  details.sources summary{cursor:pointer;font-size:12px;font-weight:600;color:var(--text);font-family:var(--display);outline:none;}
+  details.sources summary:hover{color:var(--accent);}
+  details.sources table{width:100%;border-collapse:collapse;margin-top:10px;}
+  details.sources th,details.sources td{font-size:10px;font-family:var(--mono);color:var(--muted);text-align:left;padding:5px 8px;border-bottom:1px solid var(--border);vertical-align:top;}
+  details.sources th{font-weight:600;color:var(--text);}
+  details.sources td.section-cell{font-weight:600;color:var(--text);white-space:nowrap;}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="topbar">
+  <a href="index.html" class="back">&#8592; All dashboards</a>
+  <div class="flag-label">
+    <img src="https://flagcdn.com/24x18/br.png" alt="São Paulo flag" style="height:18px;border-radius:2px;">
+    <span class="country-name">São Paulo (State)</span>
+  </div>
+</div>
+
+<div class="header">
+  <div>
+    <div class="header-title">São Paulo Macro &amp; Demographics Dashboard</div>
+  </div>
+  <div class="header-right">
+    <div style="margin-bottom:8px;display:flex;gap:8px;justify-content:flex-end;">
+      <a id="xlsBtn" download="SaoPauloDashboard.xlsx"
+         style="background:#48814b;color:#fff;padding:5px 14px;border-radius:4px;
+                font-size:11px;font-weight:600;text-decoration:none;display:inline-flex;
+                align-items:center;gap:5px;font-family:var(--sans);">&#8615; Excel</a>
+    </div>
+  </div>
+</div>
+
+<div class="info-box">
+  <strong>Coverage note:</strong> OECD provides Brazilian regional data only at the state (TL2) level.
+  This dashboard therefore covers the <strong>State of São Paulo</strong> (~46M residents — Brazil's largest state by population
+  and GDP, accounting for ~30% of national GDP). City-of-São-Paulo specific unemployment and salary data are not available
+  via free public API. National financial markets are excluded since they are not São Paulo-specific.
+</div>
+
+<div class="charts-grid">
+  <div class="chart-card chart-full">
+    <div class="chart-header"><div><div class="chart-title">São Paulo State GDP &mdash; Nominal Level (Billion BRL)</div><div class="chart-caption">10-year window &middot; OECD DSD_REG_ECO@DF_GDP &middot; REF_AREA=BR20 &middot; annual</div></div></div>
+    <div style="position:relative;height:240px;"><canvas id="gdpChart"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-header"><div><div class="chart-title">São Paulo State GDP &mdash; YoY % Growth</div><div class="chart-caption">10-year window &middot; OECD DSD_REG_ECO@DF_GDP &middot; computed from nominal level</div></div></div>
+    <div style="position:relative;height:220px;"><canvas id="gdpYoyChart"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-header"><div><div class="chart-title">São Paulo State GDP &mdash; Real Level (Billion BRL, constant prices)</div><div class="chart-caption">10-year window &middot; OECD DSD_REG_ECO@DF_GDP &middot; PRICES=Q &middot; annual</div></div></div>
+    <div style="position:relative;height:220px;"><canvas id="gdpRealChart"></canvas></div>
+  </div>
+  <div class="chart-card chart-full">
+    <div class="chart-header"><div><div class="chart-title">São Paulo State GDP per Capita (Thousand BRL)</div><div class="chart-caption">10-year window &middot; OECD DSD_REG_ECO@DF_GDP &middot; UNIT_MEASURE=XDC_PS &middot; annual</div></div></div>
+    <div style="position:relative;height:230px;"><canvas id="gdpPcChart"></canvas></div>
+  </div>
+  <div class="chart-card chart-full">
+    <div class="chart-header"><div><div class="chart-title">São Paulo State Resident Population (millions)</div><div class="chart-caption">10-year window &middot; OECD DSD_REG_ECO@DF_GDP &middot; MEASURE=POP &middot; annual</div></div></div>
+    <div style="position:relative;height:230px;"><canvas id="popChart"></canvas></div>
+  </div>
+</div>
+
+<details class="sources">
+  <summary>Data sources &amp; series IDs</summary>
+  <table>
+    <thead><tr><th>Section</th><th>Series</th><th>Source &amp; ID</th></tr></thead>
+    <tbody>      <tr><td class="section-cell" rowspan="4">Economy</td><td>São Paulo State GDP — Nominal Level (current prices, BRL)</td><td>OECD DSD_REG_ECO@DF_GDP, REF_AREA=BR20, MEASURE=GDP, PRICES=V, UNIT_MEASURE=XDC</td></tr>
+      <tr><td>São Paulo State GDP — YoY %% Growth (computed from nominal)</td><td>OECD DSD_REG_ECO@DF_GDP, REF_AREA=BR20, MEASURE=GDP, PRICES=V, UNIT_MEASURE=XDC</td></tr>
+      <tr><td>São Paulo State GDP — Real Level (constant prices, BRL)</td><td>OECD DSD_REG_ECO@DF_GDP, REF_AREA=BR20, MEASURE=GDP, PRICES=Q, UNIT_MEASURE=XDC</td></tr>
+      <tr><td>São Paulo State GDP per Capita (current prices, BRL/person)</td><td>OECD DSD_REG_ECO@DF_GDP, REF_AREA=BR20, MEASURE=GDP, PRICES=V, UNIT_MEASURE=XDC_PS</td></tr>
+      <tr><td class="section-cell" rowspan="1">Demographics</td><td>São Paulo State Resident Population (persons)</td><td>OECD DSD_REG_ECO@DF_GDP, REF_AREA=BR20, MEASURE=POP, UNIT_MEASURE=PS</td></tr></tbody>
+  </table>
+</details>
+<footer style="font-size:10px;color:var(--muted);font-family:var(--mono);padding:12px 0 8px;text-align:center;">
+  Generated 15/04/2026 14:00
+</footer>
+</div>
+
+<script>
+const xlsBtn=document.getElementById('xlsBtn');
+if(xlsBtn){const b64='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';if(b64)xlsBtn.href='data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,'+b64;else xlsBtn.style.opacity='0.4';}
+
+const dk=matchMedia('(prefers-color-scheme: dark)').matches;
+const gc=dk?'rgba(255,255,255,0.06)':'rgba(0,0,0,0.05)';
+const tc=dk?'rgba(255,255,255,0.38)':'rgba(0,0,0,0.32)';
+const tip={backgroundColor:dk?'#1c1c1a':'#fff',titleColor:dk?'#ddd':'#111',bodyColor:dk?'#aaa':'#555',borderColor:dk?'rgba(255,255,255,0.1)':'rgba(0,0,0,0.08)',borderWidth:1,padding:9,cornerRadius:6,mode:'index',intersect:false};
+
+function axOpts(cb,mn,mx){
+  return {
+    x:{grid:{color:gc},ticks:{color:tc,font:{size:10,family:'IBM Plex Sans'}}},
+    y:{min:mn,max:mx,grid:{color:gc},ticks:{color:tc,font:{size:10,family:'IBM Plex Sans'},callback:cb||(v=>v.toFixed(2))}}
+  };
+}
+function base(cb,mn,mx){
+  return {responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:tip},scales:axOpts(cb,mn,mx)};
+}
+function mkLine(id,labels,data,color,cb,mn,mx){
+  const c=document.getElementById(id);if(!c)return;
+  new Chart(c,{type:'line',data:{labels,datasets:[{data,borderColor:color,backgroundColor:color+(dk?'18':'12'),borderWidth:1.8,pointRadius:0,pointHoverRadius:4,tension:0.3,fill:true}]},options:base(cb,mn,mx)});
+}
+function mkBar(id,labels,data,color,cb){
+  const c=document.getElementById(id);if(!c)return;
+  new Chart(c,{type:'bar',data:{labels,datasets:[{data,backgroundColor:data.map(v=>(v!=null&&v<0?'#e03535':color)+'cc'),borderColor:data.map(v=>v!=null&&v<0?'#e03535':color),borderWidth:1.5,borderRadius:3}]},options:base(cb)});
+}
+
+/* ---- DATA ---- */
+const gdpL=["2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"], gdpS=[1858196.056, 1939901.907, 2038757.382, 2120761.635, 2210561.949, 2348338.0, 2377638.98, 2719751.231, 3130333.203, 3444814.033], gdpYoy=[null, 4.4, 5.1, 4.02, 4.23, 6.23, 1.25, 14.39, 15.1, 10.05];
+const gdpRealL=["2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"], gdpRealS=[2597539.12, 2521009.76, 2450869.17, 2459164.28, 2453064.44, 2500334.16, 2377638.98, 2405853.06, 2550465.97, 2668985.38];
+const gdpPcL=["2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"], gdpPcS=[37207.4, 39283.0, 42197.9, 43694.9, 45559.1, 47028.9, 48542.2, 51140.8, 51364.7, 58302.3];
+const popL=["2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2024", "2025"], popS=[44035303.0, 44396485.0, 44749698.0, 45094865.0, 45538937.0, 45919050.0, 46289333.0, 46649132.0, 45973194.0, 46081801.0];
+
+mkLine('gdpChart',gdpL,gdpS,'#48814B',v=>(v/1e3).toFixed(1)+'B');
+mkBar('gdpYoyChart',gdpL,gdpYoy,'#48814B',v=>v!=null?v.toFixed(1)+'%':'');
+mkLine('gdpRealChart',gdpRealL,gdpRealS,'#9EB28F',v=>(v/1e3).toFixed(1)+'B');
+mkLine('gdpPcChart',gdpPcL,gdpPcS,'#44697D',v=>'R$'+(v/1e3).toFixed(0)+'k');
+mkLine('popChart',popL,popS,'#55517B',v=>(v/1e6).toFixed(1)+'M');
+</script>
+</body>
+</html>
