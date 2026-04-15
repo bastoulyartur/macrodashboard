@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Macro Dashboards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --accent:#009b3a;--accent-bg:#e0f5e8;
+    --text:#0e0e0c;--muted:#6b6b65;--surface:#f0f0ed;
+    --card:#fff;--border:rgba(0,0,0,0.09);--bg:#f7f7f4;
+    --mono:'IBM Plex Mono',monospace;--display:'IBM Plex Sans',sans-serif;
+  }
+  @media(prefers-color-scheme:dark){
+    :root{--text:#eae8e0;--muted:#888;--surface:#1e1e1b;--card:#181816;
+          --border:rgba(255,255,255,0.08);--bg:#111110;--accent-bg:#062a12;}
+  }
+  html{scroll-behavior:smooth;}
+  body{font-family:var(--display);background:var(--bg);color:var(--text);min-height:100vh;}
+  .page{max-width:1000px;margin:0 auto;padding:2.5rem 1.5rem 4rem;}
+
+  .header{margin-bottom:2.2rem;}
+  .header h1{font-size:30px;font-weight:800;letter-spacing:-0.03em;line-height:1.1;}
+  .header .subtitle{font-size:12px;color:var(--muted);font-family:var(--mono);margin-top:6px;}
+
+  .section{margin-bottom:2.4rem;}
+  .section-title{font-size:11px;font-weight:600;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.9rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);}
+
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;}
+  @media(max-width:780px){.grid{grid-template-columns:repeat(3,1fr);}}
+  @media(max-width:540px){.grid{grid-template-columns:repeat(2,1fr);}}
+
+  .card{
+    background:var(--card);border:.5px solid var(--border);border-radius:10px;
+    padding:18px 14px 14px;text-decoration:none;color:inherit;
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+    transition:transform .15s ease,border-color .15s ease,background .15s ease;
+  }
+  .card:hover{transform:translateY(-2px);border-color:var(--accent);background:var(--accent-bg);}
+  .card .icon{height:32px;display:flex;align-items:center;justify-content:center;}
+  .card img{height:24px;border-radius:3px;display:block;}
+  .card .emoji{font-size:30px;line-height:1;}
+  .card .name{font-size:13px;font-weight:600;text-align:center;letter-spacing:-0.01em;}
+  .card .tag{font-size:9px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;}
+
+  .card.city{background:var(--surface);}
+  .card.city:hover{background:var(--accent-bg);}
+
+  .card.featured{
+    grid-column:span 2;flex-direction:row;justify-content:flex-start;gap:16px;
+    padding:18px 22px;
+  }
+  @media(max-width:540px){.card.featured{grid-column:span 2;}}
+  .card.featured .icon{height:auto;}
+  .card.featured .emoji{font-size:36px;}
+  .card.featured .text{display:flex;flex-direction:column;gap:3px;align-items:flex-start;}
+  .card.featured .name{font-size:15px;text-align:left;}
+  .card.featured .tag{font-size:10px;text-transform:none;letter-spacing:0;}
+
+  footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--border);font-size:11px;color:var(--muted);font-family:var(--mono);line-height:1.7;text-align:center;}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="header">
+  <h1>Macro Dashboards</h1>
+
+</div>
+
+<!-- CROSS-COUNTRY -->
+<div class="section">
+  <div class="section-title">Cross-Country</div>
+  <div class="grid">
+    <a class="card featured" href="debt_indexes_v2_dashboard.html">
+      <div class="icon"><span class="emoji">&#128202;</span></div>
+      <div class="text">
+        <div class="name">Debt Indexes</div>
+        <div class="tag">10 countries · CB rates, overnight benchmarks, 3M interbank, 10Y bonds, CPI</div>
+      </div>
+    </a>
+    <a class="card featured" href="summary_table.html">
+      <div class="icon"><span class="emoji">&#128203;</span></div>
+      <div class="text">
+        <div class="name">Summary Table</div>
+        <div class="tag">Comparison view</div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- AMERICAS -->
+<div class="section">
+  <div class="section-title">Americas</div>
+  <div class="grid">
+    <a class="card" href="brazil_dashboard.html">
+      <div class="icon"><img src="https://flagcdn.com/48x36/br.png" alt="Brazil"></div>
+      <div class="name">Brazil</div>
+      <div class="tag">Country</div>
+    </a>
+    <a class="card" href="us_dashboard.html">
+      <div class="icon"><img src="https://flagcdn.com/48x36/us.png" alt="United States"></div>
+      <div class="name">United States</div>
+      <div class="tag">Country</div>
+    </a>
+    <a class="card city" href="ca_dashboard.html">
+      <div class="icon"><span class="emoji">&#127753;</span></div>
+      <div class="name">California</div>
+      <div class="tag">State</div>
+    </a>
+    <a class="card city" href="sao_paulo_dashboard.html">
+      <div class="icon"><span class="emoji">&#127961;&#65039;</span></div>
+      <div class="name">São Paulo</div>
+      <div class="tag">State</div>
+    </a>
+  </div>
+</div>
+
+<!-- EUROPE -->
+<div class="section">
+  <div class="section-title">Europe</div>
+  <div class="grid">
+    <a class="card" href="uk_dashboard.html">
+      <div class="icon"><img src="https://flagcdn.com/48x36/gb.png" alt="United Kingdom"></div>
+      <div class="name">United Kingdom</div>
+      <div class="tag">Country</div>
+    </a>
+    <a class="card" href="de_dashboard.html">
+      <div class="icon"><img src="https://flagcdn.com/48x36/de.png" alt="Germany"></div>
+      <div class="name">Germany</div>
+      <div class="tag">Country</div>
+    </a>
+    <a class="card" href="fi_dashboard.html">
+      <div class="icon"><img src="https://flagcdn.com/48x36/fi.png" alt="Finland"></div>
+      <div class="name">Finland</div>
+      <div class="tag">Country</div>
+    </a>
+    <a class="card" href="dk_dashboard.html">
+      <div class="icon"><img src="https://flagcdn.com/48x36/dk.png" alt="Denmark"></div>
+      <div class="name">Denmark</div>
+      <div class="tag">Country</div>
+    </a>
+    <a class="card" href="se_dashboard.html">
+      <div class="icon"><img src="https://flagcdn.com/48x36/se.png" alt="Sweden"></div>
+      <div class="name">Sweden</div>
+      <div class="tag">Country</div>
+    </a>
+    <a class="card" href="no_dashboard.html">
+      <div class="icon"><img src="https://flagcdn.com/48x36/no.png" alt="Norway"></div>
+      <div class="name">Norway</div>
+      <div class="tag">Country</div>
+    </a>
+    <a class="card" href="pl_dashboard.html">
+      <div class="icon"><img src="https://flagcdn.com/48x36/pl.png" alt="Poland"></div>
+      <div class="name">Poland</div>
+      <div class="tag">Country</div>
+    </a>
+    <a class="card" href="cz_dashboard.html">
+      <div class="icon"><img src="https://flagcdn.com/48x36/cz.png" alt="Czech Republic"></div>
+      <div class="name">Czech Republic</div>
+      <div class="tag">Country</div>
+    </a>
+    <a class="card city" href="london_dashboard.html">
+      <div class="icon"><span class="emoji">&#127905;</span></div>
+      <div class="name">London</div>
+      <div class="tag">City</div>
+    </a>
+  </div>
+</div>
+
+<!-- ASIA-PACIFIC -->
+<div class="section">
+  <div class="section-title">Asia-Pacific</div>
+  <div class="grid">
+    <a class="card" href="jp_dashboard.html">
+      <div class="icon"><img src="https://flagcdn.com/48x36/jp.png" alt="Japan"></div>
+      <div class="name">Japan</div>
+      <div class="tag">Country</div>
+    </a>
+    <a class="card" href="in_dashboard.html">
+      <div class="icon"><img src="https://flagcdn.com/48x36/in.png" alt="India"></div>
+      <div class="name">India</div>
+      <div class="tag">Country</div>
+    </a>
+    <a class="card city" href="tokyo_dashboard.html">
+      <div class="icon"><span class="emoji">&#128508;</span></div>
+      <div class="name">Tokyo</div>
+      <div class="tag">City</div>
+    </a>
+  </div>
+</div>
+
+
+<footer>
+  Sources: FRED &middot; ECB &middot; BCB SGS &middot; BoE IADB &middot; ONS &middot; OECD &middot; BIS &middot; MOF Japan &middot; Riksbank &middot; Yahoo Finance
+  &nbsp;|&nbsp; Generated 15/04/2026 14:50
+</footer>
+
+</div>
+</body>
+</html>
